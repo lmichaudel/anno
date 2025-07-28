@@ -1,0 +1,34 @@
+#include "gfx/uniform.hpp"
+
+#include "log/log.hpp"
+
+#include <cassert>
+
+namespace lm {
+  Uniform::Uniform(std::string_view name, bgfx::UniformType::Enum type) {
+    m_handle = bgfx::createUniform(name.data(), type);
+    m_type = type;
+  }
+
+  Uniform::~Uniform() {
+    if (bgfx::isValid(m_handle)) {
+      LOG_DEBUG("Destroying uniform {}.", m_handle.idx);
+      bgfx::destroy(m_handle);
+    }
+  }
+
+  Uniform::operator bgfx::UniformHandle() const {
+    return m_handle;
+  }
+
+  void Uniform::bind_texture(const Texture& texture, int stage) const {
+    assert(m_type == bgfx::UniformType::Sampler);
+    bgfx::setTexture(stage, m_handle, texture);
+  }
+
+  void Uniform::set_data(const void* value, int count) const {
+    assert(m_type != bgfx::UniformType::Sampler);
+    bgfx::setUniform(m_handle, value, count);
+
+  }
+}

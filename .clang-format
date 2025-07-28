@@ -1,0 +1,7 @@
+Language: Cpp
+BasedOnStyle: LLVM
+PointerAlignment: Left
+NamespaceIndentation: All
+AllowShortFunctionsOnASingleLine: All
+IndentAccessModifiers: true
+ColumnLimit: 0

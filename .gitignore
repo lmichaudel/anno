@@ -1,0 +1,15 @@
+# IDE
+.idea/
+.cache/
+temp/
+
+# BUILD
+.build/
+res/generated
+*.bin
+
+# MacOS
+.DS_Store
+._*
+.Spotlight-V100
+imgui.ini
