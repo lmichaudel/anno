@@ -1,7 +1,5 @@
 #pragma once
 
-#include "state.hpp"
-
 int main();
 
 void init();

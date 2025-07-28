@@ -2,6 +2,8 @@
 
 #include "core/global.hpp"
 
+#include <imgui.h>
+
 #include <bx/math.h>
 
 namespace lm {
@@ -16,17 +18,19 @@ namespace lm {
 
   }
 
-  void GameState::draw(double dt) {
+  void GameState::draw(const double dt) {
     const bgfx::ViewId view_id = global->renderer->begin_frame();
 
     global->camera->bind();
 
-    bgfx::setTransform(mtxModel);
-
     s_texture.bind_texture(texture);
     u_light_dir.set_data(lightDir);
 
+    bgfx::setTransform(mtxModel);
     cube.render(view_id, program);
+
+    //ImGui::ShowDemoWindow();
+
     global->renderer->end_frame();
 
     const bgfx::Stats* stats = bgfx::getStats();

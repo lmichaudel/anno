@@ -1,10 +1,8 @@
 #include "main.hpp"
 
 #include "core/global.hpp"
-
-#include "platform/window.hpp"
-
 #include "log/log.hpp"
+#include "state.hpp"
 
 #include <chrono>
 

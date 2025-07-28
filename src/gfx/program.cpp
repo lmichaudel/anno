@@ -60,8 +60,7 @@ namespace lm {
     }
   }
 
-  Program::Program(std::string_view vs_path, std::string_view fs_path) {
-
+  Program::Program(const std::string_view vs_path, const std::string_view fs_path) {
     const bgfx::ShaderHandle vsh = load_shader("res/generated/shaders/" + get_shader_prefix() + "/" + std::string(vs_path));
     const bgfx::ShaderHandle fsh = load_shader("res/generated/shaders/" + get_shader_prefix() + "/" + std::string(fs_path));
     m_handle = bgfx::createProgram(vsh, fsh, true);

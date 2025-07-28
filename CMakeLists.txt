@@ -8,7 +8,6 @@ include_directories(res/generated)
 
 set(CMAKE_CXX_STANDARD 20)
 
-
 set(SHADER_INCLUDE ${CMAKE_SOURCE_DIR}/lib/bgfx.cmake/bgfx/examples/common ${CMAKE_SOURCE_DIR}/lib/bgfx.cmake/bgfx/src)
 bgfx_compile_shaders(
         TYPE VERTEX
@@ -50,6 +49,7 @@ add_executable(anno
         src/gfx/renderer.cpp
         src/gfx/texture.cpp
         src/gfx/uniform.cpp
+        src/gfx/imgui/imgui_impl_bgfx.cpp
 
         src/log/log.cpp
 
@@ -64,4 +64,4 @@ add_executable(anno
         res/shaders/upscale/upscale.fs.sc
 )
 
-target_link_libraries(anno glfw bgfx bx bimg glm)
+target_link_libraries(anno glfw bgfx bx bimg glm imgui)

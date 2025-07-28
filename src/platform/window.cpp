@@ -12,6 +12,12 @@
 #elif BX_PLATFORM_OSX
 #define GLFW_EXPOSE_NATIVE_COCOA
 #endif
+
+
+#include "gfx/imgui/imgui_impl_bgfx.h"
+#include <backends/imgui_impl_glfw.h>
+#include <imgui.h>
+
 #include <GLFW/glfw3native.h>
 
 static bgfx::PlatformData get_platform_data(GLFWwindow* window) {
@@ -33,7 +39,7 @@ namespace lm {
 
   constexpr uint32_t RESET_FLAGS = BGFX_RESET_VSYNC | BGFX_RESET_SRGB_BACKBUFFER;
 
-  void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+  void framebuffer_size_callback(GLFWwindow*, const int width, const int height) {
     bgfx::reset(width, height, RESET_FLAGS);
   }
 
@@ -66,10 +72,21 @@ namespace lm {
     }
 
     bgfx::setDebug(BGFX_DEBUG_TEXT);
+
+    ImGui::CreateContext();
+
+    ImGui_Implbgfx_Init(255);
+    // TODO
+    ImGui_ImplGlfw_InitForVulkan(m_window, true);
   }
 
   Window::~Window() {
+    ImGui_Implbgfx_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+
     bgfx::shutdown();
+
     glfwDestroyWindow(m_window);
     glfwTerminate();
   }
