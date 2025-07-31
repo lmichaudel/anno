@@ -16,7 +16,7 @@ namespace lm {
       static constexpr std::string_view UPSCALE_FRAGMENT_SHADER_PATH = "upscale.fs.sc.bin";
 
       Framebuffer m_framebuffer{LOW_RESOLUTION_WIDTH, LOW_RESOLUTION_HEIGHT, bgfx::TextureFormat::RGBA8, true, bgfx::TextureFormat::D24S8};
-      Program m_upscale_program{UPSCALE_VERTEX_SHADER_PATH, UPSCALE_FRAGMENT_SHADER_PATH};
+      Program m_upscale_program{"upscale"};
       Uniform m_low_resolution_sampler{"s_albedo", bgfx::UniformType::Enum::Sampler};
       Uniform m_texel_error{"u_texel_error", bgfx::UniformType::Enum::Vec4};
 

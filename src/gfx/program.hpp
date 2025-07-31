@@ -1,16 +1,16 @@
 #pragma once
 
-#include <string_view>
 #include <bgfx/bgfx.h>
+#include <string_view>
 
 namespace lm {
   class Program {
-    bgfx::ProgramHandle m_handle{bgfx::kInvalidHandle};
+      bgfx::ProgramHandle m_handle{bgfx::kInvalidHandle};
 
     public:
       Program() = default;
       ~Program();
-      Program(std::string_view vs_path, std::string_view fs_path);
+      Program(std::string_view name);
 
       Program(const Program&) = delete;
       Program& operator=(const Program&) = delete;
@@ -20,4 +20,4 @@ namespace lm {
 
       operator bgfx::ProgramHandle() const;
   };
-}
+} // namespace lm

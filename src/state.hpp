@@ -12,7 +12,7 @@ namespace lm {
       Texture texture{"res/textures/texture.jpg", texture_flags};
       Texture rock{"res/textures/rock.jpg", texture_flags};
       Texture checker{"res/textures/checker.png", texture_flags};
-      Program program{"cube.vs.sc.bin", "cube.fs.sc.bin"};
+      Program program{"cube"};
 
       float lightDir[4] = {-1.0f, -1.5f, -1.0f, 0.0f};
 

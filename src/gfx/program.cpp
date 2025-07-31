@@ -56,13 +56,14 @@ namespace lm {
       return "essl";
     case bgfx::RendererType::Vulkan:
       return "spirv";
-    default: return "";
+    default:
+      return "";
     }
   }
 
-  Program::Program(const std::string_view vs_path, const std::string_view fs_path) {
-    const bgfx::ShaderHandle vsh = load_shader("res/generated/shaders/" + get_shader_prefix() + "/" + std::string(vs_path));
-    const bgfx::ShaderHandle fsh = load_shader("res/generated/shaders/" + get_shader_prefix() + "/" + std::string(fs_path));
+  Program::Program(const std::string_view name) {
+    const bgfx::ShaderHandle vsh = load_shader("res/generated/shaders/" + std::string(name) + "/" + get_shader_prefix() + "/" + std::string(name) + ".vs.sc.bin");
+    const bgfx::ShaderHandle fsh = load_shader("res/generated/shaders/" + std::string(name) + "/" + get_shader_prefix() + "/" + std::string(name) + ".fs.sc.bin");
     m_handle = bgfx::createProgram(vsh, fsh, true);
   }
 
@@ -90,4 +91,4 @@ namespace lm {
     }
     return *this;
   }
-}
+} // namespace lm
