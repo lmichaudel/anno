@@ -3,7 +3,8 @@ project(anno)
 
 add_subdirectory(lib)
 
-include_directories(src/)
+include_directories(src)
+include_directories(lib/entt/src)
 include_directories(res/generated)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -44,12 +45,23 @@ add_executable(anno
         src/core/global.cpp
 
         src/gfx/framebuffer.cpp
+        src/gfx/framebuffer.hpp
         src/gfx/mesh.cpp
+        src/gfx/mesh.hpp
+        src/gfx/primitive.hpp
         src/gfx/program.cpp
+        src/gfx/program.hpp
         src/gfx/renderer.cpp
+        src/gfx/renderer.hpp
         src/gfx/texture.cpp
+        src/gfx/texture.hpp
         src/gfx/uniform.cpp
+        src/gfx/uniform.hpp
+        src/gfx/vertex.hpp
         src/gfx/imgui/imgui_impl_bgfx.cpp
+        src/gfx/imgui/imgui_impl_bgfx.h
+        src/gfx/imgui/vs_ocornut_imgui.bin.h
+        src/gfx/imgui/fs_ocornut_imgui.bin.h
 
         src/log/log.cpp
 

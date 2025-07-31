@@ -1,7 +1,8 @@
 #include "core/global.hpp"
 
-#include "platform/window.hpp"
 #include "gfx/renderer.hpp"
+#include "glm/trigonometric.hpp"
+#include "platform/window.hpp"
 
 namespace lm {
   Global::Global() {
@@ -9,4 +10,4 @@ namespace lm {
     renderer = std::make_unique<Renderer>(*window);
     camera = std::make_unique<Camera>();
   }
-}
+} // namespace lm

@@ -1,7 +1,7 @@
 cmake_policy(SET CMP0077 NEW)
 cmake_policy(SET CMP0175 OLD)
 
-SET(BGFX_BUILD_EXAMPLES OFF)
+#SET(BGFX_BUILD_EXAMPLES OFF)
 SET(BGFX_BUILD_TOOLS_SHADER ON)
 add_subdirectory(bgfx.cmake)
 
@@ -26,5 +26,13 @@ add_library(imgui
 )
 target_include_directories(imgui PUBLIC imgui/)
 
+set(GLM_TEST_ENABLE OFF CACHE INTERNAL "")
+set(BUILD_SHARED_LIBS OFF CACHE INTERNAL "")
+set(BUILD_STATIC_LIBS OFF CACHE INTERNAL "")
 add_subdirectory(glm)
+
+set(GLFW_BUILD_EXAMPLES OFF CACHE INTERNAL "")
+set(GLFW_BUILD_TESTS OFF CACHE INTERNAL "")
+set(GLFW_BUILD_DOCS OFF CACHE INTERNAL "")
+set(GLFW_INSTALL OFF CACHE INTERNAL "")
 add_subdirectory(glfw)

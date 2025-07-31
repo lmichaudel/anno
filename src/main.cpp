@@ -15,7 +15,7 @@ using namespace lm;
 using Clock = std::chrono::high_resolution_clock;
 using TimeStamp = std::chrono::time_point<Clock>;
 
-static constexpr double FIXED_DT = 1.0 / 60.0;
+static constexpr float FIXED_DT = 1.0 / 60.0;
 
 int main() {
   global = std::make_unique<Global>();
@@ -25,11 +25,11 @@ int main() {
     GameState state{};
 
     TimeStamp previous_stamp = Clock::now();
-    double accumulator = 0.0;
+    float accumulator = 0.0;
 
     while (!global->window->should_close()) {
       TimeStamp current_stamp = Clock::now();
-      const double dt = std::chrono::duration<double>(current_stamp - previous_stamp).count();
+      const float dt = std::chrono::duration<float>(current_stamp - previous_stamp).count();
       previous_stamp = current_stamp;
       accumulator += dt;
 
@@ -50,4 +50,3 @@ int main() {
   LOG_DEBUG("Cleaned up.");
   return 0;
 }
-

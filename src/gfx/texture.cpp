@@ -6,7 +6,7 @@
 #include "log/log.hpp"
 
 namespace lm {
-  Texture::Texture(std::string_view filename) {
+  Texture::Texture(std::string_view filename, uint64_t flags) {
     int width, height, channels;
     stbi_uc* data = stbi_load(filename.data(), &width, &height, &channels, 4); // Force RGBA
 
@@ -23,12 +23,12 @@ namespace lm {
         false,
         1,
         bgfx::TextureFormat::RGBA8,
-        BGFX_SAMPLER_POINT,
-        mem
-        );
+        flags,
+        mem);
   }
 
   Texture::Texture(uint16_t width, uint16_t height, bgfx::TextureFormat::Enum format, uint64_t flags) {
+
     m_handle = bgfx::createTexture2D(width, height, false, 1, format, flags);
   }
 
@@ -56,4 +56,4 @@ namespace lm {
     }
     return *this;
   }
-}
+} // namespace lm

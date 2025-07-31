@@ -14,7 +14,7 @@ void main()
     vec3 color = texture2D(s_texture, v_uv).rgb;
 
     // ambient
-    vec3 ambient = 0.05 * color;
+    vec3 ambient = 0.3 * color;
 
     // diffuse
     vec3 light_dir = normalize(light_pos - v_position);
