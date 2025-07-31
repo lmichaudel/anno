@@ -47,6 +47,10 @@ namespace lm {
   }
 
   void Camera::set_pivot_position(const glm::vec3 position) {
+    if (position == m_pivot) {
+      return;
+    }
+
     m_pivot = position;
     compute_view_proj();
   }
@@ -56,6 +60,10 @@ namespace lm {
   }
 
   void Camera::set_rotation(const float rotation) {
+    if (rotation == m_rotation) {
+      return;
+    }
+
     m_rotation = rotation;
 
     const auto angles = glm::vec3(glm::radians(-30.0f), glm::radians(m_rotation), 0.0f);
@@ -77,6 +85,10 @@ namespace lm {
   }
 
   void Camera::set_distance(const float distance) {
+    if (distance == m_distance) {
+      return;
+    }
+
     m_distance = distance;
     compute_view_proj();
   }
@@ -86,6 +98,10 @@ namespace lm {
   }
 
   void Camera::set_size(const float size) {
+    if (size == m_size) {
+      return;
+    }
+
     m_size = size;
     m_texel_size = m_size / static_cast<float>(Renderer::LOW_RESOLUTION_HEIGHT);
     compute_view_proj();

@@ -66,6 +66,7 @@ add_executable(anno
         src/log/log.cpp
 
         src/platform/window.cpp
+        src/platform/input.cpp
 
         src/main.cpp
         src/state.cpp

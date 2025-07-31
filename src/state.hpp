@@ -5,11 +5,13 @@
 
 namespace lm {
   struct GameState {
+      const uint64_t texture_flags = BGFX_SAMPLER_POINT;
       Mesh cube, plane, cylinder;
       Uniform s_texture{"s_texture", bgfx::UniformType::Sampler};
       Uniform u_light_dir{"lightDir", bgfx::UniformType::Vec4};
-      Texture texture{"res/textures/texture.jpg", BGFX_SAMPLER_NONE};
-      Texture rock{"res/textures/rock.jpg", BGFX_SAMPLER_NONE};
+      Texture texture{"res/textures/texture.jpg", texture_flags};
+      Texture rock{"res/textures/rock.jpg", texture_flags};
+      Texture checker{"res/textures/checker.png", texture_flags};
       Program program{"cube.vs.sc.bin", "cube.fs.sc.bin"};
 
       float lightDir[4] = {-1.0f, -1.5f, -1.0f, 0.0f};

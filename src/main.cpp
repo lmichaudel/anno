@@ -4,6 +4,10 @@
 #include "log/log.hpp"
 #include "state.hpp"
 
+#include "platform/input.hpp"
+
+#include "camera/camera.hpp"
+
 #include <chrono>
 
 namespace lm {

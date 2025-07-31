@@ -4,6 +4,7 @@
 #include "gfx/mesh.hpp"
 #include "gfx/program.hpp"
 #include "gfx/uniform.hpp"
+
 #include "platform/window.hpp"
 
 namespace lm {
@@ -14,7 +15,6 @@ namespace lm {
       static constexpr std::string_view UPSCALE_VERTEX_SHADER_PATH = "upscale.vs.sc.bin";
       static constexpr std::string_view UPSCALE_FRAGMENT_SHADER_PATH = "upscale.fs.sc.bin";
 
-      Window& m_window;
       Framebuffer m_framebuffer{LOW_RESOLUTION_WIDTH, LOW_RESOLUTION_HEIGHT, bgfx::TextureFormat::RGBA8, true, bgfx::TextureFormat::D24S8};
       Program m_upscale_program{UPSCALE_VERTEX_SHADER_PATH, UPSCALE_FRAGMENT_SHADER_PATH};
       Uniform m_low_resolution_sampler{"s_albedo", bgfx::UniformType::Enum::Sampler};
@@ -33,9 +33,7 @@ namespace lm {
       static constexpr size_t LOW_RESOLUTION_HEIGHT = 182;
       static constexpr float ASPECT = static_cast<float>(LOW_RESOLUTION_WIDTH) / static_cast<float>(LOW_RESOLUTION_HEIGHT);
 
-      Renderer(Window& window) : m_window(window) {
-      }
-
+      Renderer() = default;
       ~Renderer() = default;
 
       Renderer(const Renderer&) = delete;

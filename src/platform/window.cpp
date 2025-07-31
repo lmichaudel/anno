@@ -1,5 +1,9 @@
 #include "platform/window.hpp"
 
+#include "core/global.hpp"
+
+#include "platform/input.hpp"
+
 #include <cstdio>
 
 #include <GLFW/glfw3.h>
@@ -53,14 +57,23 @@ namespace lm {
 
   constexpr uint32_t RESET_FLAGS = BGFX_RESET_VSYNC | BGFX_RESET_SRGB_BACKBUFFER;
 
-  void framebuffer_size_callback(GLFWwindow*, const int width, const int height) {
+  void Window::framebuffer_size_callback(GLFWwindow* window, const int width, const int height) {
     bgfx::reset(width, height, RESET_FLAGS);
   }
 
-  Window::Window() {
-    memset(m_key_pressed, 0, sizeof(m_key_pressed));
-    memset(m_key_released, 0, sizeof(m_key_released));
+  void Window::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    global->input->key_callback(key, scancode, action, mods);
+  }
 
+  void Window::mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
+    global->input->mouse_button_callback(button, action, mods);
+  }
+
+  void Window::cursor_position_callback(GLFWwindow* window, double x, double y) {
+    global->input->cursor_position_callback(x, y);
+  }
+
+  Window::Window() {
 #ifdef BX_PLATFORM_LINUX
     glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
 #endif
@@ -77,6 +90,8 @@ namespace lm {
 
     glfwSetWindowUserPointer(m_window, this);
     glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback);
+    glfwSetMouseButtonCallback(m_window, mouse_button_callback);
+    glfwSetCursorPosCallback(m_window, cursor_position_callback);
     glfwSetKeyCallback(m_window, key_callback);
 
     bgfx::Init init;
@@ -112,25 +127,10 @@ namespace lm {
     glfwTerminate();
   }
 
-  void Window::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    const auto p_window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
-    if (key < 0 || key >= MAX_KEYS)
-      return;
-
-    if (action == GLFW_PRESS) {
-      p_window->m_key_pressed[key] = true;
-      p_window->m_key_down[key] = true;
-    } else if (action == GLFW_RELEASE) {
-      p_window->m_key_released[key] = true;
-      p_window->m_key_down[key] = false;
-    }
-  }
-
   bool Window::should_close() const { return glfwWindowShouldClose(m_window); }
 
-  void Window::poll() {
-    memset(m_key_pressed, 0, sizeof(m_key_pressed));
-    memset(m_key_released, 0, sizeof(m_key_released));
+  void Window::poll() const {
+    global->input->poll();
     glfwPollEvents();
   }
 
@@ -145,17 +145,4 @@ namespace lm {
     glfwGetWindowSize(m_window, &width, &height);
     return height;
   }
-
-  bool Window::is_key_down(const int key) const {
-    return key >= 0 && key < MAX_KEYS && m_key_down[key];
-  }
-
-  bool Window::was_key_pressed(const int key) const {
-    return key >= 0 && key < MAX_KEYS && m_key_pressed[key];
-  }
-
-  bool Window::was_key_released(const int key) const {
-    return key >= 0 && key < MAX_KEYS && m_key_released[key];
-  }
-
 } // namespace lm

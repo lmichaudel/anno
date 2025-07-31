@@ -1,8 +1,14 @@
 #include "state.hpp"
 
-#include "core/global.hpp"
-#include "glm/gtx/transform.hpp"
+#include "camera/camera.hpp"
 #include "log/log.hpp"
+#include "platform/input.hpp"
+
+#include "core/global.hpp"
+#define GLM_ENABLE_EXPERIMENTAL
+#include "glm/gtx/transform.hpp"
+
+#include <glm/glm.hpp>
 
 #include <imgui.h>
 
@@ -13,26 +19,30 @@ namespace lm {
   void GameState::update(float dt) {
     Camera* cam = global->camera.get();
 
-    if (global->window->was_key_pressed(GLFW_KEY_E)) {
+    if (global->input->was_key_pressed(GLFW_KEY_E)) {
       cam->set_pivot_position(cam->get_pivot_position() + cam->right() * cam->unit_pixel() / 2.0f);
     }
 
-    if (global->window->was_key_pressed(GLFW_KEY_Q)) {
+    if (global->input->was_key_pressed(GLFW_KEY_Q)) {
       cam->smooth = !cam->smooth;
       LOG_DEBUG("cam smooth: {}.", cam->smooth);
     }
 
+    if (global->input->is_button_down(GLFW_MOUSE_BUTTON_RIGHT)) {
+      cam->set_rotation(cam->get_rotation() - global->input->get_cursor_delta().x * dt * 100.0f);
+    }
+
     glm::vec3 panning{0.0f};
-    if (global->window->is_key_down(GLFW_KEY_A)) {
+    if (global->input->is_key_down(GLFW_KEY_A)) {
       panning -= cam->right();
     }
-    if (global->window->is_key_down(GLFW_KEY_D)) {
+    if (global->input->is_key_down(GLFW_KEY_D)) {
       panning += cam->right();
     }
-    if (global->window->is_key_down(GLFW_KEY_W)) {
+    if (global->input->is_key_down(GLFW_KEY_W)) {
       panning += cam->up();
     }
-    if (global->window->is_key_down(GLFW_KEY_S)) {
+    if (global->input->is_key_down(GLFW_KEY_S)) {
       panning -= cam->up();
     }
 
@@ -53,7 +63,7 @@ namespace lm {
     float model[16];
     bx::mtxScale(model, 10.f, 1.f, 10.f);
     bgfx::setTransform(model);
-    s_texture.bind_texture(rock);
+    s_texture.bind_texture(checker);
     u_light_dir.set_data(lightDir);
     plane.render(view_id, program);
 
