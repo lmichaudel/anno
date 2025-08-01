@@ -1,7 +1,5 @@
 #include "gfx/uniform.hpp"
 
-#include "log/log.hpp"
-
 #include <cassert>
 
 namespace lm {
@@ -12,7 +10,6 @@ namespace lm {
 
   Uniform::~Uniform() {
     if (bgfx::isValid(m_handle)) {
-      LOG_DEBUG("Destroying uniform {}.", m_handle.idx);
       bgfx::destroy(m_handle);
     }
   }

@@ -19,8 +19,8 @@ namespace lm {
       bool m_button_pressed[MAX_BUTTONS]{};
       bool m_button_released[MAX_BUTTONS]{};
 
-      glm::vec2 m_last_cursor_position{0.0f};
-      glm::vec<2, int> m_cursor_delta{0};
+      glm::ivec2 m_last_cursor_position{0};
+      glm::ivec2 m_cursor_delta{0};
 
       void key_callback(int key, int scancode, int action, int mods);
       void cursor_position_callback(double x, double y);
@@ -39,7 +39,7 @@ namespace lm {
       bool was_button_pressed(int button) const;
       bool was_button_released(int button) const;
 
-      glm::vec2 get_cursor_position() const;
-      glm::vec2 get_cursor_delta() const;
+      glm::ivec2 get_cursor_position() const;
+      glm::ivec2 get_cursor_delta() const;
   };
 } // namespace lm

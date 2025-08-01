@@ -23,10 +23,10 @@ static bgfx::ShaderHandle load_shader(std::string_view path) {
 
   // Allocate memory and read file
   const auto data = new char[size];
-  const size_t bytesRead = fread(data, 1, size, file);
+  const size_t bytes_read = fread(data, 1, size, file);
   fclose(file);
 
-  if (bytesRead != size) {
+  if (bytes_read != size) {
     delete[] data;
     LOG_AND_THROW_FATAL("Failed to read shader file {}.", path.data());
   }
@@ -69,7 +69,6 @@ namespace lm {
 
   Program::~Program() {
     if (bgfx::isValid(m_handle)) {
-      LOG_DEBUG("Destroying shader {}.", m_handle.idx);
       bgfx::destroy(m_handle);
     }
   }

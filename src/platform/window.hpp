@@ -2,10 +2,7 @@
 
 #include "platform/input.hpp"
 
-class GLFWwindow;
-
 namespace lm {
-
   class Window {
       GLFWwindow* m_window = nullptr;
       Input& m_input;
@@ -16,7 +13,7 @@ namespace lm {
       static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
     public:
-      Window(Input& input);
+      explicit Window(Input& input);
       ~Window();
 
       bool should_close() const;

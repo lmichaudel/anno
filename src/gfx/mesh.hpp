@@ -7,8 +7,8 @@
 
 namespace lm {
   class Mesh {
-    bgfx::VertexBufferHandle vbh{bgfx::kInvalidHandle};
-    bgfx::IndexBufferHandle ibh{bgfx::kInvalidHandle};
+    bgfx::VertexBufferHandle m_vbh{bgfx::kInvalidHandle};
+    bgfx::IndexBufferHandle m_ibh{bgfx::kInvalidHandle};
 
     public:
       Mesh() = default;

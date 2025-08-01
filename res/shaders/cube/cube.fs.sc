@@ -5,6 +5,7 @@ $input v_position, v_normal, v_uv
 SAMPLER2D(s_texture, 0);
 
 uniform vec4 light_dir;
+uniform vec4 u_id;
 
 void main()
 {
@@ -30,4 +31,5 @@ void main()
     vec3 specular = vec3(0.2) * spec;
 
     gl_FragData[0] = vec4(ambient + diffuse + specular, 1.0);
+    gl_FragData[1] = u_id;
 }

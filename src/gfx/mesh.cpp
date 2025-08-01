@@ -1,7 +1,5 @@
 #include "gfx/mesh.hpp"
 
-#include "log/log.hpp"
-
 #include <cassert>
 
 namespace lm {
@@ -9,52 +7,49 @@ namespace lm {
     assert(!vertices.empty());
     assert(!indices.empty());
 
-    vbh = bgfx::createVertexBuffer(bgfx::copy(&vertices[0], sizeof(Vertex) * vertices.size()), Vertex::layout());
-    ibh = bgfx::createIndexBuffer(bgfx::copy(&indices[0], sizeof(Indice) * indices.size()));
+    m_vbh = bgfx::createVertexBuffer(bgfx::copy(&vertices[0], sizeof(Vertex) * vertices.size()), Vertex::layout());
+    m_ibh = bgfx::createIndexBuffer(bgfx::copy(&indices[0], sizeof(Indice) * indices.size()));
   }
 
   Mesh::~Mesh() {
-    if (bgfx::isValid(vbh)) {
-      LOG_DEBUG("Destroying vertex buffer {}.", vbh.idx);
-      bgfx::destroy(vbh);
+    if (bgfx::isValid(m_vbh)) {
+      bgfx::destroy(m_vbh);
     }
 
-    if (bgfx::isValid(ibh)) {
-      LOG_DEBUG("Destroying index buffer {}.", ibh.idx);
-      bgfx::destroy(ibh);
+    if (bgfx::isValid(m_ibh)) {
+      bgfx::destroy(m_ibh);
     }
   }
 
   void Mesh::render(bgfx::ViewId view_id, const Program& program) const {
-    assert(bgfx::isValid(vbh));
-    assert(bgfx::isValid(ibh));
+    assert(bgfx::isValid(m_vbh));
+    assert(bgfx::isValid(m_ibh));
 
-    bgfx::setVertexBuffer(0, vbh);
-    bgfx::setIndexBuffer(ibh);
+    bgfx::setVertexBuffer(0, m_vbh);
+    bgfx::setIndexBuffer(m_ibh);
     bgfx::submit(view_id, program);
   }
 
-  Mesh::Mesh(Mesh&& other) noexcept :
-    vbh(other.vbh), ibh(other.ibh) {
-    other.ibh = {bgfx::kInvalidHandle};
-    other.vbh = {bgfx::kInvalidHandle};
+  Mesh::Mesh(Mesh&& other) noexcept : m_vbh(other.m_vbh), m_ibh(other.m_ibh) {
+    other.m_ibh = {bgfx::kInvalidHandle};
+    other.m_vbh = {bgfx::kInvalidHandle};
   }
 
   Mesh& Mesh::operator=(Mesh&& other) noexcept {
     if (this != &other) {
-      if (bgfx::isValid(vbh)) {
-        bgfx::destroy(vbh);
+      if (bgfx::isValid(m_vbh)) {
+        bgfx::destroy(m_vbh);
       }
-      if (bgfx::isValid(ibh)) {
-        bgfx::destroy(ibh);
+      if (bgfx::isValid(m_ibh)) {
+        bgfx::destroy(m_ibh);
       }
 
-      vbh = other.vbh;
-      ibh = other.ibh;
+      m_vbh = other.m_vbh;
+      m_ibh = other.m_ibh;
 
-      other.vbh = {bgfx::kInvalidHandle};
-      other.ibh = {bgfx::kInvalidHandle};
+      other.m_vbh = {bgfx::kInvalidHandle};
+      other.m_ibh = {bgfx::kInvalidHandle};
     }
     return *this;
   }
-}
+} // namespace lm

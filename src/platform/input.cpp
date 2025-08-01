@@ -37,9 +37,9 @@ namespace lm {
   }
 
   void Input::cursor_position_callback(const double x, const double y) {
-    const auto new_cursor_position = glm::vec2(static_cast<float>(x), static_cast<float>(y));
+    const auto new_cursor_position = glm::ivec2(static_cast<int>(x), static_cast<int>(y));
     const auto delta = new_cursor_position - m_last_cursor_position;
-    m_cursor_delta = glm::vec2(static_cast<int>(delta.x), static_cast<int>(delta.y));
+    m_cursor_delta = glm::ivec2(delta.x, delta.y);
     m_last_cursor_position = new_cursor_position;
   }
 
@@ -79,12 +79,11 @@ namespace lm {
     return button >= 0 && button < MAX_BUTTONS && m_button_released[button];
   }
 
-  glm::vec2 Input::get_cursor_position() const {
+  glm::ivec2 Input::get_cursor_position() const {
     return m_last_cursor_position;
   }
 
-  glm::vec2 Input::get_cursor_delta() const {
+  glm::ivec2 Input::get_cursor_delta() const {
     return m_cursor_delta;
   }
-
 } // namespace lm

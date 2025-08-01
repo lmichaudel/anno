@@ -3,8 +3,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "ext/stb_image.h"
 
-#include "log/log.hpp"
-
 namespace lm {
   Texture::Texture(std::string_view filename, uint64_t flags) {
     int width, height, channels;
@@ -34,7 +32,6 @@ namespace lm {
 
   Texture::~Texture() {
     if (bgfx::isValid(m_handle)) {
-      LOG_DEBUG("Destroying texture {}.", m_handle.idx);
       bgfx::destroy(m_handle);
     }
   }

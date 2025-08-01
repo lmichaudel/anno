@@ -22,13 +22,12 @@ namespace lm {
 
       float m_texel_size;
 
-      glm::mat4 view;
-      glm::mat4 proj;
+      glm::mat4 m_view;
+      glm::mat4 m_proj;
 
       void compute_view_proj();
 
     public:
-      bool smooth = true;
       Camera() {
         set_pivot_position(glm::vec3(0.0f, 0.0f, 0.0f));
         set_size(20.0f);

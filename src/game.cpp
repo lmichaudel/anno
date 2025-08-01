@@ -45,6 +45,7 @@ void lm::Game::render(const float dt) const {
   auto quad_model = glm::scale(glm::mat4(1.0f), glm::vec3(10.0f, 1.0f, 10.0f));
   bgfx::setTransform(&quad_model[0][0]);
   s_texture.bind_texture(rock);
+  engine.renderer.set_id(50);
   u_light_dir.set_data(light_dir);
   plane.render(view_id, program);
 
@@ -52,6 +53,7 @@ void lm::Game::render(const float dt) const {
   bgfx::setTransform(&cube_model[0][0]);
   s_texture.bind_texture(texture);
   u_light_dir.set_data(light_dir);
+  engine.renderer.set_id(3567);
   cube.render(view_id, program);
 
   // ImGui::ShowDemoWindow();
@@ -62,6 +64,7 @@ void lm::Game::render(const float dt) const {
   bgfx::dbgTextClear();
   bgfx::dbgTextPrintf(0, 0, 0x0f, "3D Pixel art");
   bgfx::dbgTextPrintf(0, 1, 0x0f, "Rendering at 320x180, upscaled to %dx%d.", engine.window.width(), engine.window.height());
-  bgfx::dbgTextPrintf(0, 2, 0x0f, "%i fps (CPU:%.2fms GPU:%.2fms)", static_cast<int>(1.0 / dt), 1000.0 * dt, static_cast<float>(stats->gpuTimeEnd - stats->gpuTimeBegin) * 1000.0 / stats->gpuTimerFreq);
+  bgfx::dbgTextPrintf(0, 2, 0x0f, "Picked : %i", engine.renderer.who_is_at(engine.input.get_cursor_position()));
+  bgfx::dbgTextPrintf(0, 3, 0x0f, "%i fps (CPU:%.2fms GPU:%.2fms)", static_cast<int>(1.0 / dt), 1000.0 * dt, static_cast<float>(stats->gpuTimeEnd - stats->gpuTimeBegin) * 1000.0 / stats->gpuTimerFreq);
   bgfx::frame();
 }

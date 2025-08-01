@@ -1,18 +1,12 @@
 #include "gfx/framebuffer.hpp"
 
-#include <bx/bx.h>
-
 namespace lm {
-  Framebuffer::Framebuffer(uint16_t width, uint16_t height, bgfx::TextureFormat::Enum color_format, bool use_depth, bgfx::TextureFormat::Enum depth_format) {
-    m_color = Texture{width, height, color_format, BGFX_TEXTURE_RT | BGFX_SAMPLER_POINT};
-    if (use_depth) {
-      m_depth = Texture{width, height, depth_format, BGFX_TEXTURE_RT | BGFX_SAMPLER_POINT};
-      const bgfx::TextureHandle attachments[] = {m_color, m_depth};
-      m_handle = bgfx::createFrameBuffer(BX_COUNTOF(attachments), attachments, true);
-    } else {
-      const bgfx::TextureHandle attachments[] = {m_color};
-      m_handle = bgfx::createFrameBuffer(BX_COUNTOF(attachments), attachments, true);
+  Framebuffer::Framebuffer(const std::vector<Texture*>& attachments) {
+    std::vector<bgfx::TextureHandle> handles(attachments.size());
+    for (int i = 0; i < attachments.size(); ++i) {
+      handles[i] = *attachments[i];
     }
+    m_handle = bgfx::createFrameBuffer(handles.size(), handles.data());
   }
 
   Framebuffer::~Framebuffer() {
@@ -25,10 +19,8 @@ namespace lm {
     return m_handle;
   }
 
-  Framebuffer::Framebuffer(Framebuffer&& other) noexcept : m_color(std::move(other.m_color)), m_depth(std::move(other.m_depth)), m_handle(other.m_handle) {
+  Framebuffer::Framebuffer(Framebuffer&& other) noexcept : m_handle(other.m_handle) {
     other.m_handle = {bgfx::kInvalidHandle};
-    other.m_color = {};
-    other.m_depth = {};
   }
 
   Framebuffer& Framebuffer::operator=(Framebuffer&& other) noexcept {
@@ -38,12 +30,7 @@ namespace lm {
       }
 
       m_handle = other.m_handle;
-      m_color = std::move(other.m_color);
-      m_depth = std::move(other.m_depth);
-
       other.m_handle.idx = bgfx::kInvalidHandle;
-      other.m_color = {};
-      other.m_depth = {};
     }
     return *this;
   }

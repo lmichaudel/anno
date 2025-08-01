@@ -19,13 +19,13 @@ namespace lm {
 
     m_shift = glm::vec2(-error.x / CONSTANTS::RENDER_WIDTH, error.y / CONSTANTS::RENDER_HEIGHT) / m_texel_size;
 
-    view = glm::lookAt(eye, m_pivot, glm::vec3(0.0f, 1.0f, 0.0f));
-    proj = glm::ortho(-m_size * CONSTANTS::ASPECT / 2.0f, m_size * CONSTANTS::ASPECT / 2.0f, -m_size / 2.0f, m_size / 2.0f, -1000.0f, 1000.0f);
-    proj = glm::translate(proj, -glm::vec3(error.x, error.y, 0.0f));
+    m_view = glm::lookAt(eye, m_pivot, glm::vec3(0.0f, 1.0f, 0.0f));
+    m_proj = glm::ortho(-m_size * CONSTANTS::ASPECT / 2.0f, m_size * CONSTANTS::ASPECT / 2.0f, -m_size / 2.0f, m_size / 2.0f, -1000.0f, 1000.0f);
+    m_proj = glm::translate(m_proj, -glm::vec3(error.x, error.y, 0.0f));
   }
 
   void Camera::bind() const {
-    bgfx::setViewTransform(0, &view[0][0], &proj[0][0]);
+    bgfx::setViewTransform(0, &m_view[0][0], &m_proj[0][0]);
   }
 
   glm::vec3 Camera::forward() const {
