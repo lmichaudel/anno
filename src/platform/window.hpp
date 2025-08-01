@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include "platform/input.hpp"
 
 class GLFWwindow;
 
@@ -8,6 +8,7 @@ namespace lm {
 
   class Window {
       GLFWwindow* m_window = nullptr;
+      Input& m_input;
 
       static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
       static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -15,7 +16,7 @@ namespace lm {
       static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
     public:
-      Window();
+      Window(Input& input);
       ~Window();
 
       bool should_close() const;

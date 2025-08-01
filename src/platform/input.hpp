@@ -1,17 +1,15 @@
 #pragma once
 
-#include "glm/vec2.hpp"
+#include "maths/maths.hpp"
 
 #include <GLFW/glfw3.h>
-
-#include "platform/window.hpp"
 
 #define MAX_KEYS GLFW_KEY_LAST + 1
 #define MAX_BUTTONS GLFW_MOUSE_BUTTON_LAST + 1
 
 namespace lm {
   class Input {
-      friend Window;
+      friend class Window;
 
       bool m_key_down[MAX_KEYS]{};
       bool m_key_pressed[MAX_KEYS]{};

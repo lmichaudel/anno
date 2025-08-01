@@ -1,9 +1,5 @@
 #include "platform/window.hpp"
 
-#include "core/global.hpp"
-
-#include "platform/input.hpp"
-
 #include <cstdio>
 
 #include <GLFW/glfw3.h>
@@ -62,18 +58,21 @@ namespace lm {
   }
 
   void Window::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    global->input->key_callback(key, scancode, action, mods);
+    const auto p_window = static_cast<Window*>(glfwGetWindowUserPointer(window));
+    p_window->m_input.key_callback(key, scancode, action, mods);
   }
 
   void Window::mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
-    global->input->mouse_button_callback(button, action, mods);
+    const auto p_window = static_cast<Window*>(glfwGetWindowUserPointer(window));
+    p_window->m_input.mouse_button_callback(button, action, mods);
   }
 
   void Window::cursor_position_callback(GLFWwindow* window, double x, double y) {
-    global->input->cursor_position_callback(x, y);
+    const auto p_window = static_cast<Window*>(glfwGetWindowUserPointer(window));
+    p_window->m_input.cursor_position_callback(x, y);
   }
 
-  Window::Window() {
+  Window::Window(Input& input) : m_input(input) {
 #ifdef BX_PLATFORM_LINUX
     glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
 #endif
@@ -130,7 +129,7 @@ namespace lm {
   bool Window::should_close() const { return glfwWindowShouldClose(m_window); }
 
   void Window::poll() const {
-    global->input->poll();
+    m_input.poll();
     glfwPollEvents();
   }
 

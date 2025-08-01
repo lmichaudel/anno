@@ -29,6 +29,21 @@ namespace lm {
   void Uniform::set_data(const void* value, int count) const {
     assert(m_type != bgfx::UniformType::Sampler);
     bgfx::setUniform(m_handle, value, count);
-
   }
-}
+
+  Uniform::Uniform(Uniform&& other) noexcept : m_handle(other.m_handle), m_type(other.m_type) { other.m_handle = {bgfx::kInvalidHandle}; }
+
+  Uniform& Uniform::operator=(Uniform&& other) noexcept {
+    if (this != &other) {
+      if (bgfx::isValid(m_handle)) {
+        bgfx::destroy(m_handle);
+      }
+
+      m_handle = other.m_handle;
+      m_type = other.m_type;
+
+      other.m_handle = {bgfx::kInvalidHandle};
+    }
+    return *this;
+  }
+} // namespace lm

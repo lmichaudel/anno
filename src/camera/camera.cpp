@@ -1,10 +1,8 @@
 #include "camera.hpp"
 
-#include "gfx/renderer.hpp"
-#include "log/log.hpp"
+#include "util/constants.hpp"
 
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/euler_angles.hpp>
+#include <bgfx/bgfx.h>
 
 namespace lm {
   constexpr auto FORWARD = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -19,10 +17,10 @@ namespace lm {
     const auto clamped_position = glm::vec3(round(snapped_position.x / m_texel_size) * m_texel_size, round(snapped_position.y / m_texel_size) * m_texel_size, 0.0f);
     const auto error = clamped_position - snapped_position;
 
-    m_shift = glm::vec2(-error.x / Renderer::LOW_RESOLUTION_WIDTH, error.y / Renderer::LOW_RESOLUTION_HEIGHT) / m_texel_size;
+    m_shift = glm::vec2(-error.x / CONSTANTS::RENDER_WIDTH, error.y / CONSTANTS::RENDER_HEIGHT) / m_texel_size;
 
     view = glm::lookAt(eye, m_pivot, glm::vec3(0.0f, 1.0f, 0.0f));
-    proj = glm::ortho(-m_size * Renderer::ASPECT / 2.0f, m_size * Renderer::ASPECT / 2.0f, -m_size / 2.0f, m_size / 2.0f, -1000.0f, 1000.0f);
+    proj = glm::ortho(-m_size * CONSTANTS::ASPECT / 2.0f, m_size * CONSTANTS::ASPECT / 2.0f, -m_size / 2.0f, m_size / 2.0f, -1000.0f, 1000.0f);
     proj = glm::translate(proj, -glm::vec3(error.x, error.y, 0.0f));
   }
 
@@ -103,7 +101,7 @@ namespace lm {
     }
 
     m_size = size;
-    m_texel_size = m_size / static_cast<float>(Renderer::LOW_RESOLUTION_HEIGHT);
+    m_texel_size = m_size / CONSTANTS::RENDER_HEIGHT;
     compute_view_proj();
   }
 

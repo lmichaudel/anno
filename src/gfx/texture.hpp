@@ -10,7 +10,7 @@ namespace lm {
     public:
       Texture() = default;
       ~Texture();
-      Texture(std::string_view filename, uint64_t flags);
+      Texture(std::string_view filename, uint64_t flags = BGFX_SAMPLER_POINT);
       Texture(uint16_t width, uint16_t height, bgfx::TextureFormat::Enum format, uint64_t flags = BGFX_SAMPLER_POINT);
 
       Texture(const Texture&) = delete;

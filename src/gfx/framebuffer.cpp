@@ -24,4 +24,27 @@ namespace lm {
   Framebuffer::operator bgfx::FrameBufferHandle() const {
     return m_handle;
   }
+
+  Framebuffer::Framebuffer(Framebuffer&& other) noexcept : m_color(std::move(other.m_color)), m_depth(std::move(other.m_depth)), m_handle(other.m_handle) {
+    other.m_handle = {bgfx::kInvalidHandle};
+    other.m_color = {};
+    other.m_depth = {};
+  }
+
+  Framebuffer& Framebuffer::operator=(Framebuffer&& other) noexcept {
+    if (this != &other) {
+      if (bgfx::isValid(m_handle)) {
+        bgfx::destroy(m_handle);
+      }
+
+      m_handle = other.m_handle;
+      m_color = std::move(other.m_color);
+      m_depth = std::move(other.m_depth);
+
+      other.m_handle.idx = bgfx::kInvalidHandle;
+      other.m_color = {};
+      other.m_depth = {};
+    }
+    return *this;
+  }
 } // namespace lm
