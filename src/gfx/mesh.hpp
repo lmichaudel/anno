@@ -23,4 +23,4 @@ namespace lm {
 
       void render(bgfx::ViewId view_id, const Program& program) const;
   };
-}
+} // namespace lm
