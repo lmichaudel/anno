@@ -21,13 +21,12 @@ namespace lm {
     }
   }
 
-  void Mesh::render(bgfx::ViewId view_id, const Program& program) const {
+  void Mesh::bind() const {
     assert(bgfx::isValid(m_vbh));
     assert(bgfx::isValid(m_ibh));
 
     bgfx::setVertexBuffer(0, m_vbh);
     bgfx::setIndexBuffer(m_ibh);
-    bgfx::submit(view_id, program);
   }
 
   Mesh::Mesh(Mesh&& other) noexcept : m_vbh(other.m_vbh), m_ibh(other.m_ibh) {

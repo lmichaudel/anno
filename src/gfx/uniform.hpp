@@ -8,7 +8,7 @@
 namespace lm {
   class Uniform {
       bgfx::UniformHandle m_handle{bgfx::kInvalidHandle};
-      bgfx::UniformType::Enum m_type;
+      bgfx::UniformType::Enum m_type{};
 
     public:
       Uniform() = default;

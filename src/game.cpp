@@ -5,6 +5,10 @@
 #include "gfx/primitive.hpp"
 
 void lm::Game::init() {
+  program = {"model"};
+  program.add_sampler("s_albedo", 0);
+  program.add_uniform("u_pick_id", bgfx::UniformType::Vec4);
+
   cube = {primitives::cube_vertices, primitives::cube_indices};
   plane = {primitives::plane_vertices, primitives::plane_indices};
 }
@@ -38,27 +42,19 @@ void lm::Game::tick(float dt) {
 }
 
 void lm::Game::render(const float dt) const {
-  const bgfx::ViewId view_id = engine.renderer.begin_frame();
+  engine.renderer.begin_frame();
 
   engine.camera.bind();
 
-  auto quad_model = glm::scale(glm::mat4(1.0f), glm::vec3(10.0f, 1.0f, 10.0f));
-  bgfx::setTransform(&quad_model[0][0]);
-  s_texture.bind_texture(rock);
-  engine.renderer.set_id(50);
-  u_light_dir.set_data(light_dir);
-  plane.render(view_id, program);
+  const auto quad_model = glm::scale(glm::mat4(1.0f), glm::vec3(10.0f, 1.0f, 10.0f));
+  program.set_sampler("s_albedo", rock);
+  engine.renderer.render_mesh(plane, program, quad_model, 1);
 
-  auto cube_model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 1.0f, 0.0f));
-  bgfx::setTransform(&cube_model[0][0]);
-  s_texture.bind_texture(texture);
-  u_light_dir.set_data(light_dir);
-  engine.renderer.set_id(3567);
-  cube.render(view_id, program);
+  constexpr auto cube_model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 1.0f, 0.0f));
+  program.set_sampler("s_albedo", texture);
+  engine.renderer.render_mesh(cube, program, cube_model, 2);
 
   // ImGui::ShowDemoWindow();
-
-  engine.renderer.end_frame();
 
   const bgfx::Stats* stats = bgfx::getStats();
   bgfx::dbgTextClear();
@@ -66,5 +62,6 @@ void lm::Game::render(const float dt) const {
   bgfx::dbgTextPrintf(0, 1, 0x0f, "Rendering at 320x180, upscaled to %dx%d.", engine.window.width(), engine.window.height());
   bgfx::dbgTextPrintf(0, 2, 0x0f, "Picked : %i", engine.renderer.who_is_at(engine.input.get_cursor_position()));
   bgfx::dbgTextPrintf(0, 3, 0x0f, "%i fps (CPU:%.2fms GPU:%.2fms)", static_cast<int>(1.0 / dt), 1000.0 * dt, static_cast<float>(stats->gpuTimeEnd - stats->gpuTimeBegin) * 1000.0 / stats->gpuTimerFreq);
-  bgfx::frame();
+
+  engine.renderer.end_frame();
 }

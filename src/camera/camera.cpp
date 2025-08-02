@@ -112,4 +112,8 @@ namespace lm {
   glm::vec2 Camera::get_shift() const {
     return m_shift;
   }
+
+  glm::vec3 Camera::get_eye_position() const {
+    return m_pivot + forward() * m_distance;
+  }
 } // namespace lm

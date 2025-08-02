@@ -11,25 +11,37 @@
 #include "util/constants.hpp"
 
 namespace lm {
+  struct IRenderable {
+      void bind();
+  };
+
   class Renderer {
       static constexpr bgfx::ViewId
           MAIN_VIEW = 0,
-          UPSCALE_VIEW = 1,
-          UPLOAD_VIEW = 2;
+          LIGHT_VIEW = 1,
+          UPSCALE_VIEW = 3,
+          UPLOAD_VIEW = 4; // TODO
 
       Window& m_window;
       Camera& m_camera;
 
-      Texture m_framebuffer_color, m_framebuffer_id, m_framebuffer_depth;
       Texture m_cpu_side_id_texture;
-      Framebuffer m_framebuffer;
 
+      // Step 1 : render geometry data to the G-Buffer
+      Texture m_gbuffer_position, m_gbuffer_normal, m_gbuffer_albedo, m_gbuffer_depth;
+      Framebuffer m_gbuffer;
+
+      // Step 2 : generate the lit scene using the G-Buffer
+      Texture m_main_framebuffer_color;
+      Program m_light_program;
+      Framebuffer m_main_framebuffer;
+
+      // Step 3 : upscale to the main framebuffer
+      Program m_upscale_program;
+
+      // TOOD
       uint8_t m_blit_data[CONSTANTS::RENDER_WIDTH * CONSTANTS::RENDER_HEIGHT * 4]{};
 
-      Program m_upscale_program;
-      Uniform m_low_resolution_sampler;
-      Uniform m_texel_error;
-      Uniform m_id_uniform;
       Mesh m_fullscreen_quad;
 
     public:
@@ -39,10 +51,11 @@ namespace lm {
       Renderer(const Renderer&) = delete;
       Renderer& operator=(const Renderer&) = delete;
 
-      uint16_t who_is_at(glm::ivec2 screen_position);
+      void render_mesh(const Mesh& mesh, const Program& program, glm::mat4 model = glm::mat4(1.0f), uint16_t id = 0) const;
 
-      void set_id(uint16_t id) const;
-      bgfx::ViewId begin_frame() const;
+      uint16_t who_is_at(glm::ivec2 screen_position) const;
+
+      void begin_frame() const;
       void end_frame();
   };
 } // namespace lm

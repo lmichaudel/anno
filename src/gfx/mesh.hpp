@@ -1,6 +1,5 @@
 #pragma once
 
-#include "gfx/program.hpp"
 #include "gfx/vertex.hpp"
 
 #include <span>
@@ -21,6 +20,6 @@ namespace lm {
       Mesh(Mesh&& other) noexcept;
       Mesh& operator=(Mesh&& other) noexcept;
 
-      void render(bgfx::ViewId view_id, const Program& program) const;
+      void bind() const;
   };
 } // namespace lm

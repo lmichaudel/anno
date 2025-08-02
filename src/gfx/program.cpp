@@ -90,4 +90,29 @@ namespace lm {
     }
     return *this;
   }
+
+  void Program::add_uniform(std::string identifier, bgfx::UniformType::Enum type) {
+    Uniform uniform = {identifier, type};
+    m_uniforms.emplace(identifier, std::move(uniform));
+  }
+
+  void Program::add_sampler(std::string identifier, int stage) {
+    Uniform sampler = {identifier, bgfx::UniformType::Sampler};
+    m_samplers.emplace(identifier, std::make_pair(std::move(sampler), stage));
+  }
+
+  void Program::set_uniform(const std::string_view identifier, const void* data) const {
+    auto search = m_uniforms.find(identifier.data());
+    if (search != m_uniforms.end()) {
+      search->second.set_data(data);
+    }
+  }
+
+  void Program::set_sampler(const std::string_view identifier, const Texture& texture) const {
+    auto search = m_samplers.find(identifier.data());
+    if (search != m_samplers.end()) {
+      search->second.first.bind_texture(texture, search->second.second);
+    }
+  }
+
 } // namespace lm

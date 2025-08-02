@@ -45,6 +45,8 @@ namespace lm {
 
       glm::vec2 get_shift() const;
 
+      glm::vec3 get_eye_position() const;
+
       void set_pivot_position(glm::vec3 position);
       glm::vec3 get_pivot_position() const;
 
