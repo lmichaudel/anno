@@ -1,5 +1,6 @@
 #include "game.hpp"
 
+#include "imgui.h"
 #include "log/log.hpp"
 
 #include "gfx/primitive.hpp"
@@ -58,14 +59,12 @@ void lm::Game::render(const float dt) const {
   const std::vector light_colors = {glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec4(1.0f, 0.5f, 0.5f, 1.0f)};
 
   static float acc = 0.0f;
-  acc += 50.0f * dt;
+  acc += 40.0f * dt;
   const auto angles = glm::vec3(0.0f, glm::radians(acc), 0.0f);
   const auto rotation_matrix = glm::mat3(glm::quat(angles));
 
-  engine.renderer.render_point_light(glm::normalize(rotation_matrix * glm::vec3(1.0f, 1.0f, 0.0f)) * 8.0f, 20.0f, 1.f, glm::vec3(1.0f, 1.0f, 1.0f));
+  engine.renderer.render_point_light(glm::normalize(rotation_matrix * glm::vec3(1.0f, 1.0f, 0.0f)) * 8.0f, 30.0f, 1.5f, glm::vec3(1.0f, 1.0f, 1.0f));
   engine.renderer.render_point_light(glm::vec3(-7.0f, 2.0f, -5.0f), 20.0f, 2.0f, glm::vec3(1.0f, 0.25f, 0.25f));
-
-  // ImGui::ShowDemoWindow();
 
   const bgfx::Stats* stats = bgfx::getStats();
   bgfx::dbgTextClear();
@@ -73,6 +72,10 @@ void lm::Game::render(const float dt) const {
   bgfx::dbgTextPrintf(0, 1, 0x0f, "Rendering at 320x180, upscaled to %dx%d.", engine.window.width(), engine.window.height());
   bgfx::dbgTextPrintf(0, 2, 0x0f, "Picked : %i", engine.renderer.who_is_at(engine.input.get_cursor_position()));
   bgfx::dbgTextPrintf(0, 3, 0x0f, "%i fps (CPU:%.2fms GPU:%.2fms)", static_cast<int>(1.0 / dt), 1000.0 * dt, static_cast<float>(stats->gpuTimeEnd - stats->gpuTimeBegin) * 1000.0 / stats->gpuTimerFreq);
+
+  ImGui::Begin("Demo");
+  ImGui::Text("Hello World, I'm ImGUI!");
+  ImGui::End();
 
   engine.renderer.end_frame();
 }

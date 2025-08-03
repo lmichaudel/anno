@@ -110,9 +110,8 @@ namespace lm {
 
     ImGui::CreateContext();
 
+    ImGui_ImplGlfw_InitForOther(m_window, true);
     ImGui_Implbgfx_Init(255);
-    // TODO
-    ImGui_ImplGlfw_InitForVulkan(m_window, true);
   }
 
   Window::~Window() {
