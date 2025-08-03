@@ -28,7 +28,7 @@ namespace lm {
       Texture m_cpu_side_id_texture;
 
       // Step 1 : render geometry data to the G-Buffer
-      Texture m_gbuffer_position, m_gbuffer_normal, m_gbuffer_albedo, m_gbuffer_depth;
+      Texture m_gbuffer_position, m_gbuffer_normal, m_gbuffer_albedo, m_gbuffer_data, m_gbuffer_depth;
       Framebuffer m_gbuffer;
 
       // Step 2 : generate the lit scene using the G-Buffer
@@ -39,7 +39,7 @@ namespace lm {
       // Step 3 : upscale to the main framebuffer
       Program m_upscale_program;
 
-      // TOOD
+      // TODO
       uint8_t m_blit_data[CONSTANTS::RENDER_WIDTH * CONSTANTS::RENDER_HEIGHT * 4]{};
 
       Mesh m_fullscreen_quad;

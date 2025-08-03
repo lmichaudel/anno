@@ -17,13 +17,14 @@
 namespace lm {
 
   Renderer::Renderer(Window& window, Camera& camera) : m_window(window), m_camera(camera) {
-    // m_cpu_side_id_texture = Texture{CONSTANTS::RENDER_WIDTH, CONSTANTS::RENDER_HEIGHT, bgfx::TextureFormat::RGBA16F, 0 | BGFX_TEXTURE_BLIT_DST | BGFX_TEXTURE_READ_BACK | BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MAG_POINT | BGFX_SAMPLER_MIP_POINT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP};
+    m_cpu_side_id_texture = Texture{CONSTANTS::RENDER_WIDTH, CONSTANTS::RENDER_HEIGHT, bgfx::TextureFormat::RGBA8, 0 | BGFX_TEXTURE_BLIT_DST | BGFX_TEXTURE_READ_BACK | BGFX_SAMPLER_MIN_POINT | BGFX_SAMPLER_MAG_POINT | BGFX_SAMPLER_MIP_POINT | BGFX_SAMPLER_U_CLAMP | BGFX_SAMPLER_V_CLAMP};
 
     m_gbuffer_normal = Texture{CONSTANTS::RENDER_WIDTH, CONSTANTS::RENDER_HEIGHT, bgfx::TextureFormat::RGBA16F, 0 | BGFX_TEXTURE_RT | BGFX_SAMPLER_POINT};
     m_gbuffer_position = Texture{CONSTANTS::RENDER_WIDTH, CONSTANTS::RENDER_HEIGHT, bgfx::TextureFormat::RGBA16F, 0 | BGFX_TEXTURE_RT | BGFX_SAMPLER_POINT};
     m_gbuffer_albedo = Texture{CONSTANTS::RENDER_WIDTH, CONSTANTS::RENDER_HEIGHT, bgfx::TextureFormat::RGBA8, 0 | BGFX_TEXTURE_RT | BGFX_SAMPLER_POINT};
+    m_gbuffer_data = Texture{CONSTANTS::RENDER_WIDTH, CONSTANTS::RENDER_HEIGHT, bgfx::TextureFormat::RGBA8, 0 | BGFX_TEXTURE_RT | BGFX_SAMPLER_POINT};
     m_gbuffer_depth = Texture{CONSTANTS::RENDER_WIDTH, CONSTANTS::RENDER_HEIGHT, bgfx::TextureFormat::D24S8, 0 | BGFX_TEXTURE_RT | BGFX_SAMPLER_POINT};
-    m_gbuffer = Framebuffer{std::vector{&m_gbuffer_position, &m_gbuffer_normal, &m_gbuffer_albedo, &m_gbuffer_depth}};
+    m_gbuffer = Framebuffer{std::vector{&m_gbuffer_position, &m_gbuffer_normal, &m_gbuffer_albedo, &m_gbuffer_data, &m_gbuffer_depth}};
 
     m_main_framebuffer_color = Texture{CONSTANTS::RENDER_WIDTH, CONSTANTS::RENDER_HEIGHT, bgfx::TextureFormat::RGBA8, 0 | BGFX_TEXTURE_RT | BGFX_SAMPLER_POINT};
     m_main_framebuffer = Framebuffer{std::vector{&m_main_framebuffer_color}};
@@ -53,7 +54,7 @@ namespace lm {
     bgfx::setTransform(&model[0][0]);
 
     if (id != 0) {
-      const float data[4] = {static_cast<float>(id) / 255.0f, 0.0f, 0.0f, 0.0f};
+      const float data[4] = {static_cast<float>(id) / 255.0f, 0.f, 0.f, 0.f};
       program.set_uniform("u_pick_id", &data[0]);
     }
 
@@ -65,7 +66,7 @@ namespace lm {
     const glm::vec2 ratio = glm::vec2(CONSTANTS::RENDER_WIDTH - 2, CONSTANTS::RENDER_HEIGHT - 2) / glm::vec2(m_window.width(), m_window.height());
     const glm::ivec2 texture_position = glm::ivec2(glm::vec2(screen_position) * ratio) + glm::ivec2(1, 1);
 
-    return m_blit_data[(texture_position.y * CONSTANTS::RENDER_WIDTH + texture_position.x) * 4 + 3];
+    return m_blit_data[(texture_position.y * CONSTANTS::RENDER_WIDTH + texture_position.x) * 4];
   }
 
   void Renderer::begin_frame() const {
@@ -128,8 +129,8 @@ namespace lm {
     ImGui_Implbgfx_RenderDrawLists(ImGui::GetDrawData());
 
     // TODO
-    // bgfx::blit(UPLOAD_VIEW, m_cpu_side_id_texture, 0, 0, m_gbuffer_position); // Its stored in the alpha channel :)
-    // bgfx::readTexture(m_cpu_side_id_texture, m_blit_data);
+    bgfx::blit(UPLOAD_VIEW, m_cpu_side_id_texture, 0, 0, m_gbuffer_data); // It's stored in the alpha channel :)
+    bgfx::readTexture(m_cpu_side_id_texture, m_blit_data);
 
     bgfx::frame();
   }
