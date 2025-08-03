@@ -1,5 +1,6 @@
 #include "gfx/program.hpp"
 
+#include "glm/gtc/type_ptr.hpp"
 #include "log/log.hpp"
 
 #include <cstdio>
@@ -106,6 +107,10 @@ namespace lm {
     if (search != m_uniforms.end()) {
       search->second.set_data(data);
     }
+  }
+
+  void Program::set_uniform(const std::string_view identifier, const glm::vec4& data) const {
+    set_uniform(identifier, glm::value_ptr(data));
   }
 
   void Program::set_sampler(const std::string_view identifier, const Texture& texture) const {

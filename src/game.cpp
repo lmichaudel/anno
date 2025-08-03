@@ -54,6 +54,17 @@ void lm::Game::render(const float dt) const {
   program.set_sampler("s_albedo", texture);
   engine.renderer.render_mesh(cube, program, cube_model, 2);
 
+  const std::vector light_positions = {glm::vec4(5.0f, 4.0f, 2.0f, 20.0f), glm::vec4(-5.0f, 2.0f, -3.0f, 15.0f)};
+  const std::vector light_colors = {glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), glm::vec4(1.0f, 0.5f, 0.5f, 1.0f)};
+
+  static float acc = 0.0f;
+  acc += 50.0f * dt;
+  const auto angles = glm::vec3(0.0f, glm::radians(acc), 0.0f);
+  const auto rotation_matrix = glm::mat3(glm::quat(angles));
+
+  engine.renderer.render_point_light(glm::normalize(rotation_matrix * glm::vec3(1.0f, 1.0f, 0.0f)) * 8.0f, 20.0f, 1.f, glm::vec3(1.0f, 1.0f, 1.0f));
+  engine.renderer.render_point_light(glm::vec3(-7.0f, 2.0f, -5.0f), 20.0f, 2.0f, glm::vec3(1.0f, 0.25f, 0.25f));
+
   // ImGui::ShowDemoWindow();
 
   const bgfx::Stats* stats = bgfx::getStats();

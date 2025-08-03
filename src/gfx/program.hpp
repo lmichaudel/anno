@@ -29,6 +29,7 @@ namespace lm {
       void add_sampler(std::string identifier, int stage);
 
       void set_uniform(std::string_view identifier, const void* data) const;
+      void set_uniform(std::string_view identifier, const glm::vec4& data) const;
       void set_sampler(std::string_view identifier, const Texture& texture) const;
 
       operator bgfx::ProgramHandle() const;

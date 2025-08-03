@@ -1,41 +1,3 @@
-$input v_uv
-
-#include "common.sh"
-
-SAMPLER2D(g_position, 0);
-SAMPLER2D(g_normal, 1);
-SAMPLER2D(g_albedo, 2);
-
-uniform vec4 u_camera_position;
-
-uniform vec4 u_lightPos;      // xyz = position, w = radius
-uniform vec4 u_lightColor;    // rgb = color, a = intensity
-
-// Toon shading function - creates discrete light bands
-float toonDiffuse(float NdotL) {
-    // Create 3 distinct light bands
-    if (NdotL > 0.7) return 1.0;      // Bright
-    else if (NdotL > 0.3) return 0.6; // Medium
-    else if (NdotL > 0.1) return 0.3; // Dark
-    else return 0.1;                  // Shadow
-}
-
-float toonSpecular(float NdotH) {
-    // Sharp specular highlight
-    return NdotH > 0.95 ? 1.0 : 0.0;
-}
-
-float toonAttenuation(float distance, float radius) {
-    // Sharp distance falloff instead of smooth
-    float normalized = distance / radius;
-    if (normalized > 1.0) return 0.0;
-    else if (normalized > 0.7) return 0.2;
-    else if (normalized > 0.4) return 0.6;
-    else return 1.0;
-}
-
-void main()
-{
     // Unpack G-Buffer data
     vec3 albedo = texture2D(g_albedo, v_uv).rgb;
     vec3 normal = normalize(texture2D(g_normal, v_uv).rgb);
@@ -62,7 +24,7 @@ void main()
     float NdotL = max(dot(normal, lightDir), 0.0);
 
     // Simple specular (Blinn-Phong)
-    vec3 viewDir = normalize(u_camera_position.xyz - worldPos);
+    vec3 viewDir = normalize(u_cameraPos.xyz - worldPos);
     vec3 halfDir = normalize(lightDir + viewDir);
     float NdotH = max(dot(normal, halfDir), 0.0);
     float specular = pow(NdotH, 32.0);
@@ -72,9 +34,8 @@ void main()
     vec3 spec = vec3(texture2D(g_albedo, v_uv).a) * lightColor * specular * attenuation;
 
     // Simple ambient
-    vec3 ambient = vec3(0.005) * albedo;
+    vec3 ambient = vec3(0.0) * albedo;
 
     vec3 finalColor = ambient + diffuse + spec;
 
     gl_FragColor = vec4(finalColor, 1.0);
-}

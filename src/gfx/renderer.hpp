@@ -19,8 +19,8 @@ namespace lm {
       static constexpr bgfx::ViewId
           MAIN_VIEW = 0,
           LIGHT_VIEW = 1,
-          UPSCALE_VIEW = 3,
-          UPLOAD_VIEW = 4; // TODO
+          UPSCALE_VIEW = 2,
+          UPLOAD_VIEW = 3; // TODO
 
       Window& m_window;
       Camera& m_camera;
@@ -52,6 +52,7 @@ namespace lm {
       Renderer& operator=(const Renderer&) = delete;
 
       void render_mesh(const Mesh& mesh, const Program& program, glm::mat4 model = glm::mat4(1.0f), uint16_t id = 0) const;
+      void render_point_light(glm::vec3 position, float radius, float power, glm::vec3 color) const;
 
       uint16_t who_is_at(glm::ivec2 screen_position) const;
 

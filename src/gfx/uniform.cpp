@@ -3,7 +3,7 @@
 #include <cassert>
 
 namespace lm {
-  Uniform::Uniform(std::string_view name, bgfx::UniformType::Enum type) {
+  Uniform::Uniform(const std::string_view name, const bgfx::UniformType::Enum type) {
     m_handle = bgfx::createUniform(name.data(), type);
     m_type = type;
   }
@@ -18,12 +18,12 @@ namespace lm {
     return m_handle;
   }
 
-  void Uniform::bind_texture(const Texture& texture, int stage) const {
+  void Uniform::bind_texture(const Texture& texture, const int stage) const {
     assert(m_type == bgfx::UniformType::Sampler);
     bgfx::setTexture(stage, m_handle, texture);
   }
 
-  void Uniform::set_data(const void* value, int count) const {
+  void Uniform::set_data(const void* value, const int count) const {
     assert(m_type != bgfx::UniformType::Sampler);
     bgfx::setUniform(m_handle, value, count);
   }

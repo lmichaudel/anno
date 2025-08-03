@@ -1,6 +1,7 @@
 #pragma once
 
-#include "texture.hpp"
+#include "gfx/texture.hpp"
+#include "maths/maths.hpp"
 
 #include <bgfx/bgfx.h>
 #include <string_view>
