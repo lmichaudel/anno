@@ -11,29 +11,6 @@ uniform vec4 u_camera_position;
 uniform vec4 u_lightPos;      // xyz = position, w = radius
 uniform vec4 u_lightColor;    // rgb = color, a = intensity
 
-// Toon shading function - creates discrete light bands
-float toonDiffuse(float NdotL) {
-    // Create 3 distinct light bands
-    if (NdotL > 0.7) return 1.0;      // Bright
-    else if (NdotL > 0.3) return 0.6; // Medium
-    else if (NdotL > 0.1) return 0.3; // Dark
-    else return 0.1;                  // Shadow
-}
-
-float toonSpecular(float NdotH) {
-    // Sharp specular highlight
-    return NdotH > 0.95 ? 1.0 : 0.0;
-}
-
-float toonAttenuation(float distance, float radius) {
-    // Sharp distance falloff instead of smooth
-    float normalized = distance / radius;
-    if (normalized > 1.0) return 0.0;
-    else if (normalized > 0.7) return 0.2;
-    else if (normalized > 0.4) return 0.6;
-    else return 1.0;
-}
-
 void main()
 {
     // Unpack G-Buffer data

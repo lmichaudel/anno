@@ -66,6 +66,9 @@ void lm::Game::render(const float dt) const {
   engine.renderer.render_point_light(glm::normalize(rotation_matrix * glm::vec3(1.0f, 1.0f, 0.0f)) * 8.0f, 30.0f, 1.5f, glm::vec3(1.0f, 1.0f, 1.0f));
   engine.renderer.render_point_light(glm::vec3(-7.0f, 2.0f, -5.0f), 20.0f, 2.0f, glm::vec3(1.0f, 0.25f, 0.25f));
 
+  engine.renderer.render_ambient_light(glm::vec3(1.0f, 1.0f, 1.0f), 0.005f);
+  engine.renderer.render_directional_light(glm::vec3(1.0f, -1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.1f);
+
   const bgfx::Stats* stats = bgfx::getStats();
   bgfx::dbgTextClear();
   bgfx::dbgTextPrintf(0, 0, 0x0f, "3D Pixel art");

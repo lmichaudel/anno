@@ -29,13 +29,25 @@ namespace lm {
     m_main_framebuffer_color = Texture{CONSTANTS::RENDER_WIDTH, CONSTANTS::RENDER_HEIGHT, bgfx::TextureFormat::RGBA16F, 0 | BGFX_TEXTURE_RT | BGFX_SAMPLER_POINT};
     m_main_framebuffer = Framebuffer{std::vector{&m_main_framebuffer_color}};
 
-    m_light_program = {"light"};
-    m_light_program.add_sampler("g_position", 0);
-    m_light_program.add_sampler("g_normal", 1);
-    m_light_program.add_sampler("g_albedo", 2);
-    m_light_program.add_uniform("u_camera_position", bgfx::UniformType::Vec4);
-    m_light_program.add_uniform("u_lightPos", bgfx::UniformType::Vec4);
-    m_light_program.add_uniform("u_lightColor", bgfx::UniformType::Vec4);
+    m_point_light_program = {"point_light"};
+    m_point_light_program.add_sampler("g_position", 0);
+    m_point_light_program.add_sampler("g_normal", 1);
+    m_point_light_program.add_sampler("g_albedo", 2);
+    m_point_light_program.add_uniform("u_camera_position", bgfx::UniformType::Vec4);
+    m_point_light_program.add_uniform("u_lightPos", bgfx::UniformType::Vec4);
+    m_point_light_program.add_uniform("u_lightColor", bgfx::UniformType::Vec4);
+
+    m_directional_light_program = {"directional_light"};
+    m_directional_light_program.add_sampler("g_position", 0);
+    m_directional_light_program.add_sampler("g_normal", 1);
+    m_directional_light_program.add_sampler("g_albedo", 2);
+    m_directional_light_program.add_uniform("u_camera_position", bgfx::UniformType::Vec4);
+    m_directional_light_program.add_uniform("u_lightDir", bgfx::UniformType::Vec4);
+    m_directional_light_program.add_uniform("u_lightColor", bgfx::UniformType::Vec4);
+
+    m_ambient_light_program = {"ambient_light"};
+    m_ambient_light_program.add_sampler("g_albedo", 0);
+    m_ambient_light_program.add_uniform("u_lightColor", bgfx::UniformType::Vec4);
 
     m_upscale_program = {"upscale"};
     m_upscale_program.add_sampler("s_main_framebuffer_color", 0);
@@ -76,18 +88,42 @@ namespace lm {
     bgfx::submit(MAIN_VIEW, program);
   }
 
-  void Renderer::render_point_light(const glm::vec3 position, const float radius, const float power, const glm::vec3 color) const {
-    m_light_program.set_uniform("u_lightPos", glm::vec4(position, radius));
-    m_light_program.set_uniform("u_lightColor", glm::vec4(color, power));
+  void Renderer::render_ambient_light(const glm::vec3 color, const float intensity) const {
+    m_ambient_light_program.set_uniform("u_lightColor", glm::vec4(color, intensity));
 
-    m_light_program.set_uniform("u_camera_position", glm::vec4(m_camera.get_eye_position(), 0.0f));
-    m_light_program.set_sampler("g_position", m_gbuffer_position);
-    m_light_program.set_sampler("g_normal", m_gbuffer_normal);
-    m_light_program.set_sampler("g_albedo", m_gbuffer_albedo);
+    m_ambient_light_program.set_sampler("g_albedo", m_gbuffer_albedo);
 
     m_fullscreen_quad.bind();
     bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_BLEND_ADD);
-    bgfx::submit(LIGHT_VIEW, m_light_program);
+    bgfx::submit(LIGHT_VIEW, m_ambient_light_program);
+  }
+
+  void Renderer::render_directional_light(const glm::vec3 direction, const glm::vec3 color, const float intensity) const {
+    m_directional_light_program.set_uniform("u_lightDir", glm::vec4(direction, 0.0f));
+    m_directional_light_program.set_uniform("u_lightColor", glm::vec4(color, intensity));
+    m_directional_light_program.set_uniform("u_camera_position", glm::vec4(m_camera.get_eye_position(), 0.0f));
+
+    m_directional_light_program.set_sampler("g_position", m_gbuffer_position);
+    m_directional_light_program.set_sampler("g_normal", m_gbuffer_normal);
+    m_directional_light_program.set_sampler("g_albedo", m_gbuffer_albedo);
+
+    m_fullscreen_quad.bind();
+    bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_BLEND_ADD);
+    bgfx::submit(LIGHT_VIEW, m_directional_light_program);
+  }
+
+  void Renderer::render_point_light(const glm::vec3 position, const float radius, const float power, const glm::vec3 color) const {
+    m_point_light_program.set_uniform("u_lightPos", glm::vec4(position, radius));
+    m_point_light_program.set_uniform("u_lightColor", glm::vec4(color, power));
+
+    m_point_light_program.set_uniform("u_camera_position", glm::vec4(m_camera.get_eye_position(), 0.0f));
+    m_point_light_program.set_sampler("g_position", m_gbuffer_position);
+    m_point_light_program.set_sampler("g_normal", m_gbuffer_normal);
+    m_point_light_program.set_sampler("g_albedo", m_gbuffer_albedo);
+
+    m_fullscreen_quad.bind();
+    bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_BLEND_ADD);
+    bgfx::submit(LIGHT_VIEW, m_point_light_program);
   }
 
   uint16_t Renderer::who_is_at(const glm::ivec2 screen_position) const {

@@ -33,7 +33,7 @@ namespace lm {
 
       // Step 2 : generate the lit scene using the G-Buffer
       Texture m_main_framebuffer_color;
-      Program m_light_program;
+      Program m_directional_light_program, m_ambient_light_program, m_point_light_program;
       Framebuffer m_main_framebuffer;
 
       // Step 3 : upscale to the main framebuffer
@@ -52,6 +52,9 @@ namespace lm {
       Renderer& operator=(const Renderer&) = delete;
 
       void render_mesh(const Mesh& mesh, const Program& program, glm::mat4 model = glm::mat4(1.0f), uint16_t id = 0) const;
+
+      void render_ambient_light(glm::vec3 color, float intensity) const;
+      void render_directional_light(glm::vec3 direction, glm::vec3 color, float intensity) const;
       void render_point_light(glm::vec3 position, float radius, float power, glm::vec3 color) const;
 
       uint16_t who_is_at(glm::ivec2 screen_position) const;
