@@ -1,5 +1,6 @@
 #include "gfx/program.hpp"
 
+#include "bgfx/bgfx.h"
 #include "glm/gtc/type_ptr.hpp"
 #include "log/log.hpp"
 
@@ -57,8 +58,10 @@ namespace lm {
       return "essl";
     case bgfx::RendererType::Vulkan:
       return "spirv";
+    case bgfx::RendererType::Metal:
+      return "metal";
     default:
-      return "";
+      return ""; // TODO
     }
   }
 

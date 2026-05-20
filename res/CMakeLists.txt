@@ -1,5 +1,3 @@
-add_executable(packer packer.cpp)
-
 file(GLOB_RECURSE SHADERS "shaders/*.sc")
 
 set(SHADER_INCLUDE ${CMAKE_SOURCE_DIR}/lib/bgfx.cmake/bgfx/examples/common ${CMAKE_SOURCE_DIR}/lib/bgfx.cmake/bgfx/src)
@@ -21,6 +19,15 @@ foreach (SHADER_FILE IN LISTS SHADERS)
             SHADERS ${SHADER_FILE}
             VARYING_DEF ${DIR_NAME}/varying.def.sc
             OUT_FILES_VAR ARTEFACTS
+            OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated/shaders/${FILE_NAME}
+            INCLUDE_DIRS ${SHADER_INCLUDE}
+    )
+
+    bgfx_compile_shaders(
+            TYPE ${TYPE}
+            SHADERS ${SHADER_FILE}
+            VARYING_DEF ${DIR_NAME}/varying.def.sc
+            OUT_FILES_VAR ARTEFACTS
             OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/generated/shaders/${FILE_NAME}
             INCLUDE_DIRS ${SHADER_INCLUDE}
     )
@@ -32,14 +39,19 @@ add_custom_target(shaders ALL
         DEPENDS ${SHADER_ARTEFACTS}
 )
 
-add_custom_command(
-        OUTPUT data.bin
-        COMMAND packer
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        DEPENDS packer shaders
-        COMMENT "Packing resources into data.bin"
+add_custom_target(assets ALL)
+add_dependencies(assets shaders)
+
+add_custom_command(TARGET assets POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/generated
+        ${CMAKE_CURRENT_BINARY_DIR}/generated
+    COMMENT "Copying generated folder to build directory."
 )
 
-add_custom_target(assets ALL
-        DEPENDS data.bin
+add_custom_command(TARGET assets POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/textures
+        ${CMAKE_CURRENT_BINARY_DIR}/textures
+    COMMENT "Copying textures to build directory."
 )

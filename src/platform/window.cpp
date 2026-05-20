@@ -74,7 +74,7 @@ namespace lm {
 
   Window::Window(Input& input) : m_input(input) {
 #ifdef BX_PLATFORM_LINUX
-    glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
+    //glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
 #endif
     if (!glfwInit()) {
       LOG_AND_THROW_FATAL("Could not initialize GLFW.");
